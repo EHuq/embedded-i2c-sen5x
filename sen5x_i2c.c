@@ -39,7 +39,7 @@
 #include "sen5x_i2c.h"
 #include "sensirion_common.h"
 #include "sensirion_i2c.h"
-#include "sensirion_i2c_hal.h"
+#include "sensirion_i2c_hal_sen5x.h"
 
 #define SEN5X_I2C_ADDRESS 0x69
 
@@ -53,7 +53,7 @@ int16_t sen5x_start_measurement(void) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(50000);
+    sensirion_i2c_hal_sleep_usec_sen5x(50000);
     return NO_ERROR;
 }
 
@@ -67,7 +67,7 @@ int16_t sen5x_start_measurement_without_pm(void) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(50000);
+    sensirion_i2c_hal_sleep_usec_sen5x(50000);
     return NO_ERROR;
 }
 
@@ -81,7 +81,7 @@ int16_t sen5x_stop_measurement(void) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(200000);
+    sensirion_i2c_hal_sleep_usec_sen5x(200000);
     return NO_ERROR;
 }
 
@@ -96,7 +96,7 @@ int16_t sen5x_read_data_ready(bool* data_ready) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 2);
     if (error) {
@@ -123,20 +123,20 @@ int16_t sen5x_read_measured_values(uint16_t* mass_concentration_pm1p0,
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 16);
     if (error) {
         return error;
     }
-    *mass_concentration_pm1p0 = sensirion_common_bytes_to_uint16_t(&buffer[0]);
-    *mass_concentration_pm2p5 = sensirion_common_bytes_to_uint16_t(&buffer[2]);
-    *mass_concentration_pm4p0 = sensirion_common_bytes_to_uint16_t(&buffer[4]);
-    *mass_concentration_pm10p0 = sensirion_common_bytes_to_uint16_t(&buffer[6]);
-    *ambient_humidity = sensirion_common_bytes_to_int16_t(&buffer[8]);
-    *ambient_temperature = sensirion_common_bytes_to_int16_t(&buffer[10]);
-    *voc_index = sensirion_common_bytes_to_int16_t(&buffer[12]);
-    *nox_index = sensirion_common_bytes_to_int16_t(&buffer[14]);
+    *mass_concentration_pm1p0 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[0]);
+    *mass_concentration_pm2p5 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[2]);
+    *mass_concentration_pm4p0 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[4]);
+    *mass_concentration_pm10p0 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[6]);
+    *ambient_humidity = sensirion_common_bytes_to_int16_t_sen5x(&buffer[8]);
+    *ambient_temperature = sensirion_common_bytes_to_int16_t_sen5x(&buffer[10]);
+    *voc_index = sensirion_common_bytes_to_int16_t_sen5x(&buffer[12]);
+    *nox_index = sensirion_common_bytes_to_int16_t_sen5x(&buffer[14]);
     return NO_ERROR;
 }
 
@@ -153,16 +153,16 @@ int16_t sen5x_read_measured_raw_values(int16_t* raw_humidity,
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 8);
     if (error) {
         return error;
     }
-    *raw_humidity = sensirion_common_bytes_to_int16_t(&buffer[0]);
-    *raw_temperature = sensirion_common_bytes_to_int16_t(&buffer[2]);
-    *raw_voc = sensirion_common_bytes_to_uint16_t(&buffer[4]);
-    *raw_nox = sensirion_common_bytes_to_uint16_t(&buffer[6]);
+    *raw_humidity = sensirion_common_bytes_to_int16_t_sen5x(&buffer[0]);
+    *raw_temperature = sensirion_common_bytes_to_int16_t_sen5x(&buffer[2]);
+    *raw_voc = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[4]);
+    *raw_nox = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[6]);
     return NO_ERROR;
 }
 
@@ -202,27 +202,27 @@ int16_t sen5x_read_measured_pm_values(
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 20);
     if (error) {
         return error;
     }
-    *mass_concentration_pm1p0 = sensirion_common_bytes_to_uint16_t(&buffer[0]);
-    *mass_concentration_pm2p5 = sensirion_common_bytes_to_uint16_t(&buffer[2]);
-    *mass_concentration_pm4p0 = sensirion_common_bytes_to_uint16_t(&buffer[4]);
-    *mass_concentration_pm10p0 = sensirion_common_bytes_to_uint16_t(&buffer[6]);
+    *mass_concentration_pm1p0 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[0]);
+    *mass_concentration_pm2p5 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[2]);
+    *mass_concentration_pm4p0 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[4]);
+    *mass_concentration_pm10p0 = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[6]);
     *number_concentration_pm0p5 =
-        sensirion_common_bytes_to_uint16_t(&buffer[8]);
+        sensirion_common_bytes_to_uint16_t_sen5x(&buffer[8]);
     *number_concentration_pm1p0 =
-        sensirion_common_bytes_to_uint16_t(&buffer[10]);
+        sensirion_common_bytes_to_uint16_t_sen5x(&buffer[10]);
     *number_concentration_pm2p5 =
-        sensirion_common_bytes_to_uint16_t(&buffer[12]);
+        sensirion_common_bytes_to_uint16_t_sen5x(&buffer[12]);
     *number_concentration_pm4p0 =
-        sensirion_common_bytes_to_uint16_t(&buffer[14]);
+        sensirion_common_bytes_to_uint16_t_sen5x(&buffer[14]);
     *number_concentration_pm10p0 =
-        sensirion_common_bytes_to_uint16_t(&buffer[16]);
-    *typical_particle_size = sensirion_common_bytes_to_uint16_t(&buffer[18]);
+        sensirion_common_bytes_to_uint16_t_sen5x(&buffer[16]);
+    *typical_particle_size = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[18]);
     return NO_ERROR;
 }
 
@@ -236,7 +236,7 @@ int16_t sen5x_start_fan_cleaning(void) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -258,7 +258,7 @@ int16_t sen5x_set_temperature_offset_parameters(int16_t temp_offset,
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -275,15 +275,15 @@ int16_t sen5x_get_temperature_offset_parameters(int16_t* temp_offset,
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 6);
     if (error) {
         return error;
     }
-    *temp_offset = sensirion_common_bytes_to_int16_t(&buffer[0]);
-    *slope = sensirion_common_bytes_to_int16_t(&buffer[2]);
-    *time_constant = sensirion_common_bytes_to_uint16_t(&buffer[4]);
+    *temp_offset = sensirion_common_bytes_to_int16_t_sen5x(&buffer[0]);
+    *slope = sensirion_common_bytes_to_int16_t_sen5x(&buffer[2]);
+    *time_constant = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[4]);
     return NO_ERROR;
 }
 
@@ -300,7 +300,7 @@ int16_t sen5x_set_warm_start_parameter(uint16_t warm_start) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -315,13 +315,13 @@ int16_t sen5x_get_warm_start_parameter(uint16_t* warm_start) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 2);
     if (error) {
         return error;
     }
-    *warm_start = sensirion_common_bytes_to_uint16_t(&buffer[0]);
+    *warm_start = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[0]);
     return NO_ERROR;
 }
 
@@ -351,7 +351,7 @@ int16_t sen5x_set_voc_algorithm_tuning_parameters(
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -369,19 +369,19 @@ int16_t sen5x_get_voc_algorithm_tuning_parameters(
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 12);
     if (error) {
         return error;
     }
-    *index_offset = sensirion_common_bytes_to_int16_t(&buffer[0]);
-    *learning_time_offset_hours = sensirion_common_bytes_to_int16_t(&buffer[2]);
-    *learning_time_gain_hours = sensirion_common_bytes_to_int16_t(&buffer[4]);
+    *index_offset = sensirion_common_bytes_to_int16_t_sen5x(&buffer[0]);
+    *learning_time_offset_hours = sensirion_common_bytes_to_int16_t_sen5x(&buffer[2]);
+    *learning_time_gain_hours = sensirion_common_bytes_to_int16_t_sen5x(&buffer[4]);
     *gating_max_duration_minutes =
-        sensirion_common_bytes_to_int16_t(&buffer[6]);
-    *std_initial = sensirion_common_bytes_to_int16_t(&buffer[8]);
-    *gain_factor = sensirion_common_bytes_to_int16_t(&buffer[10]);
+        sensirion_common_bytes_to_int16_t_sen5x(&buffer[6]);
+    *std_initial = sensirion_common_bytes_to_int16_t_sen5x(&buffer[8]);
+    *gain_factor = sensirion_common_bytes_to_int16_t_sen5x(&buffer[10]);
     return NO_ERROR;
 }
 
@@ -411,7 +411,7 @@ int16_t sen5x_set_nox_algorithm_tuning_parameters(
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -429,19 +429,19 @@ int16_t sen5x_get_nox_algorithm_tuning_parameters(
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 12);
     if (error) {
         return error;
     }
-    *index_offset = sensirion_common_bytes_to_int16_t(&buffer[0]);
-    *learning_time_offset_hours = sensirion_common_bytes_to_int16_t(&buffer[2]);
-    *learning_time_gain_hours = sensirion_common_bytes_to_int16_t(&buffer[4]);
+    *index_offset = sensirion_common_bytes_to_int16_t_sen5x(&buffer[0]);
+    *learning_time_offset_hours = sensirion_common_bytes_to_int16_t_sen5x(&buffer[2]);
+    *learning_time_gain_hours = sensirion_common_bytes_to_int16_t_sen5x(&buffer[4]);
     *gating_max_duration_minutes =
-        sensirion_common_bytes_to_int16_t(&buffer[6]);
-    *std_initial = sensirion_common_bytes_to_int16_t(&buffer[8]);
-    *gain_factor = sensirion_common_bytes_to_int16_t(&buffer[10]);
+        sensirion_common_bytes_to_int16_t_sen5x(&buffer[6]);
+    *std_initial = sensirion_common_bytes_to_int16_t_sen5x(&buffer[8]);
+    *gain_factor = sensirion_common_bytes_to_int16_t_sen5x(&buffer[10]);
     return NO_ERROR;
 }
 
@@ -457,7 +457,7 @@ int16_t sen5x_set_rht_acceleration_mode(uint16_t mode) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -472,13 +472,13 @@ int16_t sen5x_get_rht_acceleration_mode(uint16_t* mode) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 2);
     if (error) {
         return error;
     }
-    *mode = sensirion_common_bytes_to_uint16_t(&buffer[0]);
+    *mode = sensirion_common_bytes_to_uint16_t_sen5x(&buffer[0]);
     return NO_ERROR;
 }
 
@@ -496,7 +496,7 @@ int16_t sen5x_set_voc_algorithm_state(const uint8_t* state,
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -511,13 +511,13 @@ int16_t sen5x_get_voc_algorithm_state(uint8_t* state, uint8_t state_size) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 8);
     if (error) {
         return error;
     }
-    sensirion_common_copy_bytes(&buffer[0], state, state_size);
+    sensirion_common_copy_bytes_sen5x(&buffer[0], state, state_size);
     return NO_ERROR;
 }
 
@@ -533,7 +533,7 @@ int16_t sen5x_set_fan_auto_cleaning_interval(uint32_t interval) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
     return NO_ERROR;
 }
 
@@ -548,13 +548,13 @@ int16_t sen5x_get_fan_auto_cleaning_interval(uint32_t* interval) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 4);
     if (error) {
         return error;
     }
-    *interval = sensirion_common_bytes_to_uint32_t(&buffer[0]);
+    *interval = sensirion_common_bytes_to_uint32_t_sen5x(&buffer[0]);
     return NO_ERROR;
 }
 
@@ -570,13 +570,13 @@ int16_t sen5x_get_product_name(unsigned char* product_name,
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(50000);
+    sensirion_i2c_hal_sleep_usec_sen5x(50000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 32);
     if (error) {
         return error;
     }
-    sensirion_common_copy_bytes(&buffer[0], product_name, product_name_size);
+    sensirion_common_copy_bytes_sen5x(&buffer[0], product_name, product_name_size);
     return NO_ERROR;
 }
 
@@ -592,13 +592,13 @@ int16_t sen5x_get_serial_number(unsigned char* serial_number,
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(50000);
+    sensirion_i2c_hal_sleep_usec_sen5x(50000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 32);
     if (error) {
         return error;
     }
-    sensirion_common_copy_bytes(&buffer[0], serial_number, serial_number_size);
+    sensirion_common_copy_bytes_sen5x(&buffer[0], serial_number, serial_number_size);
     return NO_ERROR;
 }
 
@@ -616,7 +616,7 @@ int16_t sen5x_get_version(uint8_t* firmware_major, uint8_t* firmware_minor,
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 8);
     if (error) {
@@ -643,13 +643,13 @@ int16_t sen5x_read_device_status(uint32_t* device_status) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 4);
     if (error) {
         return error;
     }
-    *device_status = sensirion_common_bytes_to_uint32_t(&buffer[0]);
+    *device_status = sensirion_common_bytes_to_uint32_t_sen5x(&buffer[0]);
     return NO_ERROR;
 }
 
@@ -664,13 +664,13 @@ int16_t sen5x_read_and_clear_device_status(uint32_t* device_status) {
         return error;
     }
 
-    sensirion_i2c_hal_sleep_usec(20000);
+    sensirion_i2c_hal_sleep_usec_sen5x(20000);
 
     error = sensirion_i2c_read_data_inplace(SEN5X_I2C_ADDRESS, &buffer[0], 4);
     if (error) {
         return error;
     }
-    *device_status = sensirion_common_bytes_to_uint32_t(&buffer[0]);
+    *device_status = sensirion_common_bytes_to_uint32_t_sen5x(&buffer[0]);
     return NO_ERROR;
 }
 
@@ -684,6 +684,6 @@ int16_t sen5x_device_reset(void) {
     if (error) {
         return error;
     }
-    sensirion_i2c_hal_sleep_usec(200000);
+    sensirion_i2c_hal_sleep_usec_sen5x(200000);
     return NO_ERROR;
 }

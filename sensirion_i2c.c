@@ -32,7 +32,7 @@
 #include "sensirion_i2c.h"
 #include "sensirion_common.h"
 #include "sensirion_config.h"
-#include "sensirion_i2c_hal.h"
+#include "sensirion_i2c_hal_sen5x.h"
 
 uint8_t sensirion_i2c_generate_crc(const uint8_t* data, uint16_t count) {
     uint16_t current_byte;
@@ -61,7 +61,7 @@ int8_t sensirion_i2c_check_crc(const uint8_t* data, uint16_t count,
 
 int16_t sensirion_i2c_general_call_reset(void) {
     const uint8_t data = 0x06;
-    return sensirion_i2c_hal_write(0, &data, (uint16_t)sizeof(data));
+    return sensirion_i2c_hal_write_sen5x(0, &data, (uint16_t)sizeof(data));
 }
 
 uint16_t sensirion_i2c_fill_cmd_send_buf(uint8_t* buf, uint16_t cmd,
@@ -92,7 +92,7 @@ int16_t sensirion_i2c_read_words_as_bytes(uint8_t address, uint8_t* data,
     uint16_t word_buf[SENSIRION_MAX_BUFFER_WORDS];
     uint8_t* const buf8 = (uint8_t*)word_buf;
 
-    ret = sensirion_i2c_hal_read(address, buf8, size);
+    ret = sensirion_i2c_hal_read_sen5x(address, buf8, size);
     if (ret != NO_ERROR)
         return ret;
 
@@ -133,7 +133,7 @@ int16_t sensirion_i2c_write_cmd(uint8_t address, uint16_t command) {
     uint8_t buf[SENSIRION_COMMAND_SIZE];
 
     sensirion_i2c_fill_cmd_send_buf(buf, command, NULL, 0);
-    return sensirion_i2c_hal_write(address, buf, SENSIRION_COMMAND_SIZE);
+    return sensirion_i2c_hal_write_sen5x(address, buf, SENSIRION_COMMAND_SIZE);
 }
 
 int16_t sensirion_i2c_write_cmd_with_args(uint8_t address, uint16_t command,
@@ -144,7 +144,7 @@ int16_t sensirion_i2c_write_cmd_with_args(uint8_t address, uint16_t command,
 
     buf_size =
         sensirion_i2c_fill_cmd_send_buf(buf, command, data_words, num_words);
-    return sensirion_i2c_hal_write(address, buf, buf_size);
+    return sensirion_i2c_hal_write_sen5x(address, buf, buf_size);
 }
 
 int16_t sensirion_i2c_delayed_read_cmd(uint8_t address, uint16_t cmd,
@@ -154,12 +154,12 @@ int16_t sensirion_i2c_delayed_read_cmd(uint8_t address, uint16_t cmd,
     uint8_t buf[SENSIRION_COMMAND_SIZE];
 
     sensirion_i2c_fill_cmd_send_buf(buf, cmd, NULL, 0);
-    ret = sensirion_i2c_hal_write(address, buf, SENSIRION_COMMAND_SIZE);
+    ret = sensirion_i2c_hal_write_sen5x(address, buf, SENSIRION_COMMAND_SIZE);
     if (ret != NO_ERROR)
         return ret;
 
     if (delay_us)
-        sensirion_i2c_hal_sleep_usec(delay_us);
+        sensirion_i2c_hal_sleep_usec_sen5x(delay_us);
 
     return sensirion_i2c_read_words(address, data_words, num_words);
 }
@@ -260,7 +260,7 @@ uint16_t sensirion_i2c_add_bytes_to_buffer(uint8_t* buffer, uint16_t offset,
 
 int16_t sensirion_i2c_write_data(uint8_t address, const uint8_t* data,
                                  uint16_t data_length) {
-    return sensirion_i2c_hal_write(address, data, data_length);
+    return sensirion_i2c_hal_write_sen5x(address, data, data_length);
 }
 
 int16_t sensirion_i2c_read_data_inplace(uint8_t address, uint8_t* buffer,
@@ -274,7 +274,7 @@ int16_t sensirion_i2c_read_data_inplace(uint8_t address, uint8_t* buffer,
         return BYTE_NUM_ERROR;
     }
 
-    error = sensirion_i2c_hal_read(address, buffer, size);
+    error = sensirion_i2c_hal_read_sen5x(address, buffer, size);
     if (error) {
         return error;
     }
